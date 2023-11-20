@@ -33,7 +33,7 @@ router.get('/price',async(req,res)=>{
     res.header("Access-Control-Allow-Origin", "*");
 
     try{
-        const SQL = "Select ifNULL(sum(price),0) as price from basket;";
+        const SQL = "Select ifNULL(sum(price),0) as totalprice from basket;";
         const connection = db.return_connection();
 
         connection.query(SQL,function(err,results,field){
@@ -44,7 +44,7 @@ router.get('/price',async(req,res)=>{
                 })
             }
             return res.status(200).json({
-                price: results[0].price
+                totalprice: results[0].totalprice
             })
         })
     }
