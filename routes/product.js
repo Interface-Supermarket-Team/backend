@@ -143,22 +143,22 @@ router.get('/name/:name',async(req,res)=>{
 
     try{
         
-        const name = req.params.name+'%';
+        const name = '%' + req.params.name + '%';
 
-        const SQL = "Select * from product where name Like ?;";
+        const SQL = "select distinct * from product where name LIKE ? or category LIKE ?;";
         const connection = db.return_connection();
 
-        connection.query(SQL,name,function(err,results,field){
+        connection.query(SQL,[name,name],function(err,results,field){
             if(err){
                 console.error(err.toString());
                 return res.status(400).json({
                     error: err.toString()
                 })
             }
-            console.log(name + " 조회");
+            console.log(req.params.name + " 조회");
             return res.status(200).json({
                 status: 200,
-                message: name + " 조회",
+                message: req.params.name + " 조회",
                 productList: results
             })
         })
