@@ -12,6 +12,7 @@ const productRouter = require('./routes/product');
 const marketRouter = require('./routes/market');
 const categoryRouter = require('./routes/category');
 const basketRouter = require('./routes/basket');
+const orderRouter = require('./routes/order');
 
 const db = require('./db');
 
@@ -32,6 +33,7 @@ app.use('/product',productRouter);
 app.use('/market',marketRouter);
 app.use('/category',categoryRouter);
 app.use('/basket',basketRouter);
+app.use('/order',orderRouter);
 
 app.get('/', async (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
