@@ -1,5 +1,21 @@
 const router = require('express').Router();
 const db = require('../db');
+const multer = require('multer');
+
+const upload = multer({
+    storage: multer.diskStorage({
+      	filename(req, file, done) {
+            //png로 음식 사진 저장
+			done(null, req.body.name+'.png');
+        },
+		destination(req, file, done) {
+      		console.log(file);
+		    done(null, path.join(__dirname, "public"));
+	    },
+    }),
+});
+
+const uploadMiddleware = upload.single('myFile');
 
 //상품 등록
 router.post('/',async(req,res)=>{
@@ -24,10 +40,37 @@ router.post('/',async(req,res)=>{
                 })
             }
             console.log("상품이 등록됐습니다.");
-            return res.status(200).json({
-                status: 200,
-                message: "상품이 등록됐습니다."
-            })
+            return res.status(200).json({})
+        })
+    }
+    catch(err){
+        console.error(err.toString());
+        return res.status(400).json({
+            error: err.toString()
+        })
+    }
+
+});
+
+//상품 이미지 등록
+router.post('/image',uploadMiddleware,async(req,res)=>{
+    res.header("Access-Control-Allow-Origin", "*");
+
+    try{
+        const name = req.body.name;
+
+        const SQL = "Insert into product (name,category,price,image,intro,main)values (?,?,?,?,?,?);";
+        const connection = db.return_connection();
+        
+        connection.query(SQL,[name,category,price,image,intro,main],function(err,results,field){
+            if(err){
+                console.error(err.toString());
+                return res.status(400).json({
+                    error: err.toString()
+                })
+            }
+            console.log("상품이 등록됐습니다.");
+            return res.status(200).json({})
         })
     }
     catch(err){
@@ -56,11 +99,7 @@ router.get('/all',async(req,res)=>{
                 })
             }
             console.log("상품 전체 조회");
-            return res.status(200).json({
-                status: 200,
-                message: "상품 전체 조회",
-                productList: results
-            })
+            return res.status(200).json(results)
         })
     }
     catch(err){
@@ -88,11 +127,9 @@ router.get('/main',async(req,res)=>{
                 })
             }
             console.log("메인 상품 조회");
-            return res.status(200).json({
-                status: 200,
-                message: "메인 상품 조회",
-                productList: results
-            })
+            return res.status(200).json(
+                results
+            )
         })
     }
     catch(err){
@@ -122,11 +159,7 @@ router.get('/category/:category',async(req,res)=>{
                 })
             }
             console.log(category + " 조회");
-            return res.status(200).json({
-                status: 200,
-                message: category + " 조회",
-                productList: results
-            })
+            return res.status(200).json(results)
         })
     }
     catch(err){
@@ -156,11 +189,7 @@ router.get('/name/:name',async(req,res)=>{
                 })
             }
             console.log(req.params.name + " 조회");
-            return res.status(200).json({
-                status: 200,
-                message: req.params.name + " 조회",
-                productList: results
-            })
+            return res.status(200).json(results)
         })
     }
     catch(err){
@@ -190,8 +219,6 @@ router.get('/:id',async(req,res)=>{
             }
             console.log("상품 " + id + " 조회");
             return res.status(200).json({
-                status: 200,
-                message: "상품 " + id + " 조회",
                 id: id,
                 name: results[0].name,
                 category: results[0].category,
@@ -229,10 +256,7 @@ router.delete('/:id',async(req,res)=>{
             }
 
             console.log("상품 " + id + " 삭제");
-            return res.status(200).json({
-                status: 200,
-                message: "상품 " + id + " 삭제"
-            })
+            return res.status(200).json({})
         })
     }
     catch(err){
@@ -268,10 +292,7 @@ router.put('/:id',async(req,res)=>{
             }
 
             console.log("상품 " + name + " 수정");
-            return res.status(200).json({
-                status: 200,
-                message: "상품 " + name + " 수정"
-            })
+            return res.status(200).json({})
         })
 
         

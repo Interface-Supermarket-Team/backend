@@ -17,11 +17,7 @@ router.get('/all',async(req,res)=>{
                 })
             }
             console.log("전체 카테고리 정보 조회");
-            return res.status(200).json({
-                status: 200,
-                message: "전체 카테고리 정보 조회",
-                categoryList: results
-            })
+            return res.status(200).json(results)
         })
     }
     catch(err){
@@ -50,8 +46,6 @@ router.get('/:id',async(req,res)=>{
             }
             console.log(results[0].name + "카테고리 정보 조회");
             return res.status(200).json({
-                status: 200,
-                message: results[0].name + "카테고리 정보 조회",
                 id: results[0].id,
                 name:results[0].name,
             })
@@ -84,10 +78,7 @@ router.post('/',async(req,res)=>{
                 })
             }
             console.log("카테고리 " + name + " 추가");
-            return res.status(200).json({
-                status:200,
-                message: "카테고리 " + name + " 추가"
-            })
+            return res.status(200).json({})
         })
     }
     catch(err){
@@ -118,10 +109,7 @@ router.put('/:id',async(req,res)=>{
                 })
             }
             console.log("카테고리 " + id + " 수정");
-            return res.status(200).json({
-                status:200,
-                message: "카테고리 " + id + " 수정"
-            })
+            return res.status(200).json({})
         })
     }
     catch(err){
@@ -150,10 +138,7 @@ router.delete('/:id',async(req,res)=>{
                 })
             }
             console.log("카테고리 " + id + " 삭제");
-            return res.status(200).json({
-                status:200,
-                message: "카테고리 " + id + " 삭제"
-            })
+            return res.status(200).json({})
         })
     }
     catch(err){

@@ -8,7 +8,7 @@ router.get('/:id',async(req,res)=>{
     const id = req.params.id;
 
     try{
-        const SQL = "select * from market where id = ?;";
+        const SQL = "select * from market where id = ? order by id;";
         const connection = db.return_connection();
         
         connection.query(SQL,[id],function(err,results,field){
@@ -20,8 +20,6 @@ router.get('/:id',async(req,res)=>{
             }
             console.log(results[0].name + "가게 정보 조회");
             return res.status(200).json({
-                status: 200,
-                message: results[0].name + "가게 정보 조회",
                 id: results[0].id,
                 name:results[0].name,
                 info:results[0].info,

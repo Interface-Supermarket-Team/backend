@@ -2,6 +2,10 @@ const express = require('express');
 const app = express();
 const port = 3000;
 const bodyParser = require('body-parser');
+const path = require('path');
+
+const publicPath = path.join(__dirname+'/image', 'public');
+
 const cors = require('cors');
 
 const productRouter = require('./routes/product');
@@ -11,6 +15,7 @@ const categoryRouter = require('./routes/category');
 const db = require('./db');
 
 app.use(bodyParser.json());
+app.use(express.static(publicPath));
 
 db.connect();
 
