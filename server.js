@@ -4,7 +4,7 @@ const port = 3000;
 const bodyParser = require('body-parser');
 const path = require('path');
 
-const publicPath = path.join(__dirname+'/image', 'public');
+const publicPath = path.join(__dirname,'image', 'public');
 
 const cors = require('cors');
 
@@ -15,6 +15,7 @@ const categoryRouter = require('./routes/category');
 const db = require('./db');
 
 app.use(bodyParser.json());
+console.log(publicPath);
 app.use(express.static(publicPath));
 
 db.connect();

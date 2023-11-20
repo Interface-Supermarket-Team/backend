@@ -69,7 +69,7 @@ router.post('/image',uploadMiddleware,async(req,res)=>{
                     error: err.toString()
                 })
             }
-            console.log("상품이 등록됐습니다.");
+            console.log("상품 이미지가 등록됐습니다.");
             return res.status(200).json({})
         })
     }
@@ -88,7 +88,7 @@ router.get('/all',async(req,res)=>{
     res.header("Access-Control-Allow-Origin", "*");
 
     try{
-        const SQL = "Select * from product order by id;";
+        const SQL = "Select id,name,category,price,image,intro from product order by id;";
         const connection = db.return_connection();
 
         connection.query(SQL,function(err,results,field){
@@ -116,7 +116,7 @@ router.get('/main',async(req,res)=>{
 
     try{
 
-        const SQL = "Select * from product where main = 1 order by id;";
+        const SQL = "Select id,name,category,price,image,intro from product where main = 1 order by id;";
         const connection = db.return_connection();
 
         connection.query(SQL,function(err,results,field){
@@ -148,7 +148,7 @@ router.get('/category/:category',async(req,res)=>{
 
         const category = req.params.category;
 
-        const SQL = "Select * from product where category = ? order by id;";
+        const SQL = "Select id,name,category,price,image,intro from product where category = ? order by id;";
         const connection = db.return_connection();
 
         connection.query(SQL,category,function(err,results,field){
@@ -178,7 +178,7 @@ router.get('/name/:name',async(req,res)=>{
         
         const name = '%' + req.params.name + '%';
 
-        const SQL = "select distinct * from product where name LIKE ? or category LIKE ? order by id;";
+        const SQL = "select distinct id,name,category,price,image,intro from product where name LIKE ? or category LIKE ? order by id;";
         const connection = db.return_connection();
 
         connection.query(SQL,[name,name],function(err,results,field){
@@ -207,10 +207,11 @@ router.get('/:id',async(req,res)=>{
     try{
         const id = req.params.id;
 
-        const SQL = "Select * from product where id = ? order by id;";
+        const subquery = "group_concat( Select id,name,item from options where JSON_CONTAINS(product_id,?,'$') )"
+        const SQL = "Select id,name,category,price,image,intro,spicy, " + subquery + " from product where id = ? group by id order by id;";
         const connection = db.return_connection();
 
-        connection.query(SQL,[id],function(err,results,field){
+        connection.query(SQL,[id,id],function(err,results,field){
             if(err){
                 console.error(err.toString());
                 return res.status(400).json({
@@ -224,7 +225,8 @@ router.get('/:id',async(req,res)=>{
                 category: results[0].category,
                 price: results[0].price,
                 image: results[0].image,
-                intro: results[0].intro
+                intro: results[0].intro,
+                spicy: JSON.parse(results[0].spicy)
             })
         })
     }
@@ -279,6 +281,7 @@ router.put('/:id',async(req,res)=>{
         const image = req.body.image;
         const intro = req.body.intro;
         const main = req.body.main;
+
 
         const SQL = "update product set name = ? , category = ? , price = ? , image = ? , intro = ? , main = ? where id = ?;";
         const connection = db.return_connection();
