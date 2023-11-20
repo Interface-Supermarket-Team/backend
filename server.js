@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const productRouter = require('./routes/product');
+const marketRouter = require('./routes/market');
+const categoryRouter = require('./routes/category');
 
 const db = require('./db');
 
@@ -20,6 +22,8 @@ let corsOptions = {
 app.use(cors(corsOptions));
 
 app.use('/product',productRouter);
+app.use('/market',marketRouter);
+app.use('/category',categoryRouter);
 
 app.get('/', async (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");

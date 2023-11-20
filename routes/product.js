@@ -45,7 +45,7 @@ router.get('/all',async(req,res)=>{
     res.header("Access-Control-Allow-Origin", "*");
 
     try{
-        const SQL = "Select * from product;";
+        const SQL = "Select * from product order by id;";
         const connection = db.return_connection();
 
         connection.query(SQL,function(err,results,field){
@@ -77,7 +77,7 @@ router.get('/main',async(req,res)=>{
 
     try{
 
-        const SQL = "Select * from product where main = 1;";
+        const SQL = "Select * from product where main = 1 order by id;";
         const connection = db.return_connection();
 
         connection.query(SQL,function(err,results,field){
@@ -111,7 +111,7 @@ router.get('/category/:category',async(req,res)=>{
 
         const category = req.params.category;
 
-        const SQL = "Select * from product where category = ?;";
+        const SQL = "Select * from product where category = ? order by id;";
         const connection = db.return_connection();
 
         connection.query(SQL,category,function(err,results,field){
@@ -145,7 +145,7 @@ router.get('/name/:name',async(req,res)=>{
         
         const name = '%' + req.params.name + '%';
 
-        const SQL = "select distinct * from product where name LIKE ? or category LIKE ?;";
+        const SQL = "select distinct * from product where name LIKE ? or category LIKE ? order by id;";
         const connection = db.return_connection();
 
         connection.query(SQL,[name,name],function(err,results,field){
@@ -178,7 +178,7 @@ router.get('/:id',async(req,res)=>{
     try{
         const id = req.params.id;
 
-        const SQL = "Select * from product where id = ?;";
+        const SQL = "Select * from product where id = ? order by id;";
         const connection = db.return_connection();
 
         connection.query(SQL,[id],function(err,results,field){
