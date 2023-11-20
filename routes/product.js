@@ -222,7 +222,7 @@ router.get('/:id',async(req,res)=>{
             connection.query(SQL2,[id],function(err,results2,field){
                 console.log(results2);
                 return res.status(200).json({
-                    id: id,
+                    id: results1[0].id,
                     name: results1[0].name,
                     category: results1[0].category,
                     price: results1[0].price,
