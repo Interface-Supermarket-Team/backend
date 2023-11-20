@@ -207,11 +207,11 @@ router.get('/:id',async(req,res)=>{
     try{
         const id = req.params.id;
 
-        const subquery = "group_concat( Select id,name,item from options where JSON_CONTAINS(product_id,?,'$') )"
-        const SQL = "Select id,name,category,price,image,intro,spicy, " + subquery + " from product where id = ? group by id order by id;";
+        const SQL = "Select id,name,category,price,image,intro,spicy from product where id = ? order by id;";
+        const SQL2 = "Select id,name,item from options where JSON_CONTAINS(product_id,?,'$');";
         const connection = db.return_connection();
 
-        connection.query(SQL,[id,id],function(err,results,field){
+        connection.query(SQL,[id],function(err,results1,field){
             if(err){
                 console.error(err.toString());
                 return res.status(400).json({
@@ -219,14 +219,18 @@ router.get('/:id',async(req,res)=>{
                 })
             }
             console.log("상품 " + id + " 조회");
-            return res.status(200).json({
-                id: id,
-                name: results[0].name,
-                category: results[0].category,
-                price: results[0].price,
-                image: results[0].image,
-                intro: results[0].intro,
-                spicy: JSON.parse(results[0].spicy)
+            connection.query(SQL2,[id],function(err,results2,field){
+                console.log(results2);
+                return res.status(200).json({
+                    id: id,
+                    name: results1[0].name,
+                    category: results1[0].category,
+                    price: results1[0].price,
+                    image: results1[0].image,
+                    intro: results1[0].intro,
+                    spicy: results1[0].spicy,
+                    options: results2
+                })
             })
         })
     }

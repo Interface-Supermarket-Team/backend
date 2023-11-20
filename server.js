@@ -11,11 +11,12 @@ const cors = require('cors');
 const productRouter = require('./routes/product');
 const marketRouter = require('./routes/market');
 const categoryRouter = require('./routes/category');
+const basketRouter = require('./routes/basket');
 
 const db = require('./db');
 
 app.use(bodyParser.json());
-console.log(publicPath);
+
 app.use(express.static(publicPath));
 
 db.connect();
@@ -30,6 +31,7 @@ app.use(cors(corsOptions));
 app.use('/product',productRouter);
 app.use('/market',marketRouter);
 app.use('/category',categoryRouter);
+app.use('/basket',basketRouter);
 
 app.get('/', async (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
